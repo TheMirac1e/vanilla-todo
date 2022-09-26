@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
     <link rel="stylesheet" href="src/style.css">
     <title>vanilla todo</title>
 </head>
@@ -12,19 +12,12 @@
 <section class="section">
     <div class="container">
         <div class="todo-list">
-            <div class="todo-list__wrap-input">
-                <label for="todoinput">
-                    Write your task here:
-                    <input type="text" id="todoinput">
-                </label>
-                <button type="button">Add</button>
-            </div>
-            <ul class="todo-list__list">
-                <li class="todo-list__item">Some staff</li>
-                <li class="todo-list__item is-checked">Some staff</li>
-                <li class="todo-list__item">Some staff</li>
-                <li class="todo-list__item">Some staff</li>
-            </ul>
+            <h1 class="todo-list__title">todolist</h1>
+            <form class="todo-list__form">
+                <label for="todoInput"></label>
+                <input type="text" placeholder="To do..." id="todoInput">
+                <button class="todo-list__add" type="submit">add</button>
+            </form>
         </div>
     </div>
 </section>
