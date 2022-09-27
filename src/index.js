@@ -1,9 +1,10 @@
 class ToDoList {
-    constructor(taskText, listElement) {
+    constructor(listElement) {
         this.tasks = JSON.parse(window.localStorage.getItem('tasks')) || [];
         this.listElement = listElement;
-        this.taskText = taskText;
-        this.isComplete = false;
+        this.taskText = '';
+        this.isChecked = false;
+        this.taskId = Math.floor(Math.random() * Date.now())
         this.init();
     }
 
@@ -19,26 +20,47 @@ class ToDoList {
             const liElement = document.createElement('li');
 
             liElement.classList.add('todo-list__item');
-            liElement.setAttribute('id', `task-number-${index}`);
+            liElement.setAttribute('id', `${text.id}`);
             liElement.innerHTML = `
-                <label for="checked-${index}">
-                    <input id="checked-${index}" type="checkbox">
-                        ${text.task}
-                    </label>
+               <label for="checked-${index}">
+                   ${text.task}
+               </label>
             `
 
+            const checkboxElement = document.createElement('input');
+
+            checkboxElement.setAttribute('id', `checked-${index}`);
+            checkboxElement.setAttribute('type', 'checkbox');
+            checkboxElement.addEventListener('click', () => {
+                if (checkboxElement.checked) {
+                    this.isChecked = true;
+                    this.saveTaskInLocalStorage();
+                    liElement.classList.add('is-checked');
+                    deleteButton.setAttribute('disabled', 'disabled');
+                } else {
+                    this.isChecked = false;
+                    this.saveTaskInLocalStorage();
+                    liElement.classList.remove('is-checked');
+                    deleteButton.removeAttribute('disabled');
+                }
+            })
+
             const deleteButton = document.createElement('button');
+
             deleteButton.classList.add('todo-list__delete');
             deleteButton.setAttribute('type', 'button');
             deleteButton.innerText = 'delete'
             deleteButton.addEventListener('click', () => {
-                ulElement.removeChild(liElement);
-                this.tasks = this.tasks.slice(0, index).concat(this.tasks.slice(index + 1, this.tasks.length));
+                this.tasks = this.tasks.filter(item => {
+                    return liElement.id.toString() !== item.id.toString();
+                });
                 this.saveTaskInLocalStorage();
+                ulElement.removeChild(liElement);
             })
 
-            liElement.appendChild(deleteButton);
             ulElement.appendChild(liElement);
+            liElement.appendChild(deleteButton);
+            liElement.insertAdjacentElement('afterbegin', checkboxElement);
         })
 
         this.listElement.appendChild(ulElement);
@@ -50,7 +72,8 @@ class ToDoList {
         } else {
             this.tasks.push({
                 'task': this.taskText,
-                'isComplete': this.isComplete,
+                'isComplete': this.isChecked,
+                'id': this.taskId,
             });
             this.saveTaskInLocalStorage();
         }
@@ -65,8 +88,9 @@ class ToDoList {
 const todoInput = document.querySelector('#todoInput');
 const addForm = document.querySelector('.todo-list__form');
 const todoListElement = document.querySelector('.todo-list');
+const todoListAdd = document.querySelector('.todo-list__add');
 
-const todoList = new ToDoList(todoInput.value, todoListElement);
+const todoList = new ToDoList(todoListElement);
 
 addForm.addEventListener('change', (e) => {
     e.preventDefault();
@@ -74,6 +98,8 @@ addForm.addEventListener('change', (e) => {
     if (todoInput.value !== '') {
         todoList.taskText = todoInput.value;
         todoList.addTask(todoInput.value);
+    } else {
+        console.log('Sorry, you must add something to input. Thanks!');
     }
     todoInput.value = '';
 })
