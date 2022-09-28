@@ -16,36 +16,45 @@ class ToDoList {
         const ulElement = document.createElement('ul');
         ulElement.classList.add('todo-list__list');
 
-        this.tasks.forEach((text, index) => {
+        this.tasks.forEach((item, index) => {
             const liElement = document.createElement('li');
+            const deleteButton = document.createElement('button');
+            const checkboxElement = document.createElement('input');
 
             liElement.classList.add('todo-list__item');
-            liElement.setAttribute('id', `${text.id}`);
+            liElement.setAttribute('id', `${item.id}`);
             liElement.innerHTML = `
                <label for="checked-${index}">
-                   ${text.task}
+                   ${item.task}
                </label>
             `
 
-            const checkboxElement = document.createElement('input');
-
             checkboxElement.setAttribute('id', `checked-${index}`);
             checkboxElement.setAttribute('type', 'checkbox');
+
+            if (item.isComplete) {
+                liElement.classList.add('is-checked');
+                checkboxElement.checked = true;
+                deleteButton.setAttribute('disabled', 'disabled');
+            } else {
+                liElement.classList.remove('is-checked');
+                checkboxElement.checked = false;
+                deleteButton.removeAttribute('disabled');
+            }
+
             checkboxElement.addEventListener('click', () => {
                 if (checkboxElement.checked) {
-                    this.isChecked = true;
+                    item.isComplete = true;
                     this.saveTaskInLocalStorage();
                     liElement.classList.add('is-checked');
                     deleteButton.setAttribute('disabled', 'disabled');
                 } else {
-                    this.isChecked = false;
+                    item.isComplete = false;
                     this.saveTaskInLocalStorage();
                     liElement.classList.remove('is-checked');
                     deleteButton.removeAttribute('disabled');
                 }
             })
-
-            const deleteButton = document.createElement('button');
 
             deleteButton.classList.add('todo-list__delete');
             deleteButton.setAttribute('type', 'button');
@@ -88,7 +97,6 @@ class ToDoList {
 const todoInput = document.querySelector('#todoInput');
 const addForm = document.querySelector('.todo-list__form');
 const todoListElement = document.querySelector('.todo-list');
-const todoListAdd = document.querySelector('.todo-list__add');
 
 const todoList = new ToDoList(todoListElement);
 
