@@ -9,18 +9,24 @@
     <title>vanilla todo</title>
 </head>
 <body>
-<section class="section">
+<header>
     <div class="container">
-        <div class="todo-list">
-            <h1 class="todo-list__title">todolist</h1>
-            <form class="todo-list__form">
-                <label for="todoInput"></label>
-                <input type="text" placeholder="To do..." id="todoInput">
-                <button class="todo-list__add" type="submit">add</button>
-            </form>
-        </div>
+        <h1 class="todo-list__title">todolist</h1>
     </div>
-</section>
+</header>
+<main role="main">
+    <section class="section">
+        <div class="container">
+            <div class="todo-list">
+                <form class="todo-list__form" role="form" aria-label="To do list form">
+                    <label class="is-hidden" for="todoInput">form</label>
+                    <input type="text" placeholder="To do..." id="todoInput">
+                    <button class="todo-list__add" type="submit">add</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
 <script src="src/js/index.js"></script>
 </body>
 </html>

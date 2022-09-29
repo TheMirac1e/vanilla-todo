@@ -117,10 +117,18 @@ body {
 .todo-list__delete:disabled {
     color: grey;
     border-color: grey;
+    pointer-events: none;
 }
 
 .todo-list__delete:hover,
 .todo-list__delete:focus {
     background: #333333;
     color: #ffffff;
+}
+
+.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    padding: 0;
 }

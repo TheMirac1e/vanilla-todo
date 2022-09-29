@@ -4,9 +4,15 @@ class ToDoList {
         this.listElement = listElement;
         this.taskText = '';
         this.isChecked = false;
-        this.taskId = Math.floor(Math.random() * Date.now())
+        this.taskId = Math.floor(Math.random() * Date.now());
         this.init();
     }
+
+    /**
+     * TODO:
+     * add edit button to edit task name
+     * add filter buttons or inputs
+     */
 
     init() {
         this.createTaskElement();
@@ -15,6 +21,7 @@ class ToDoList {
     createTaskElement() {
         const ulElement = document.createElement('ul');
         ulElement.classList.add('todo-list__list');
+        ulElement.setAttribute('role', 'list');
 
         this.tasks.forEach((item, index) => {
             const liElement = document.createElement('li');
@@ -23,6 +30,7 @@ class ToDoList {
 
             liElement.classList.add('todo-list__item');
             liElement.setAttribute('id', `${item.id}`);
+            liElement.setAttribute('role', 'listitem');
             liElement.innerHTML = `
                <label for="checked-${index}">
                    ${item.task}
@@ -36,10 +44,6 @@ class ToDoList {
                 liElement.classList.add('is-checked');
                 checkboxElement.checked = true;
                 deleteButton.setAttribute('disabled', 'disabled');
-            } else {
-                liElement.classList.remove('is-checked');
-                checkboxElement.checked = false;
-                deleteButton.removeAttribute('disabled');
             }
 
             checkboxElement.addEventListener('click', () => {
@@ -100,14 +104,12 @@ const todoListElement = document.querySelector('.todo-list');
 
 const todoList = new ToDoList(todoListElement);
 
-addForm.addEventListener('change', (e) => {
-    e.preventDefault();
-
+addForm.addEventListener('submit', (e) => {
     if (todoInput.value !== '') {
         todoList.taskText = todoInput.value;
         todoList.addTask(todoInput.value);
     } else {
-        console.log('Sorry, you must add something to input. Thanks!');
+        alert('Sorry, you must add something to input. Thanks!');
     }
     todoInput.value = '';
 })
