@@ -8,14 +8,10 @@ class ToDoList {
         this.init();
     }
 
-    /**
-     * TODO:
-     * add edit button to edit task name
-     * add filter buttons or inputs
-     */
-
     init() {
         this.createTaskElement();
+        this.formSubmitHandler();
+        this.filterInputHandler();
     }
 
     createTaskElement() {
@@ -92,24 +88,61 @@ class ToDoList {
         }
     }
 
+    filterInputHandler() {
+        const todoFilter = document.querySelector('.todo-list__filter');
+
+        todoFilter.addEventListener('change', (e) => {
+            this.filterByName(e);
+        })
+
+    }
+
+    filterByName(event) {
+        const tasks = document.querySelectorAll('.todo-list__item');
+
+        tasks.forEach(task => {
+            switch (event.target.value) {
+                case 'all':
+                    task.style.display = 'flex';
+                    break;
+                case 'uncompleted':
+                    if(task.classList.contains('is-checked')) {
+                        task.style.display = 'none';
+                    } else {
+                        task.style.display = 'flex';
+                    }
+                    break;
+                case 'completed':
+                    if(!task.classList.contains('is-checked')) {
+                        task.style.display = 'none';
+                    } else {
+                        task.style.display = 'flex';
+                    }
+                    break;
+            }
+        })
+    }
+
+    formSubmitHandler() {
+        const addForm = document.querySelector('.todo-list__form');
+        const todoInput = document.getElementById('todoInput');
+
+        addForm.addEventListener('submit', () => {
+            if (todoInput.value !== '') {
+                this.taskText = todoInput.value;
+                this.addTask(todoInput.value);
+            } else {
+                alert('Sorry, you must add something to input. Thanks!');
+            }
+            todoInput.value = '';
+        })
+    }
+
+
     saveTaskInLocalStorage() {
         window.localStorage.setItem('tasks', JSON.stringify(this.tasks))
     }
 }
 
+new ToDoList(document.querySelector('.todo-list'));
 
-const todoInput = document.querySelector('#todoInput');
-const addForm = document.querySelector('.todo-list__form');
-const todoListElement = document.querySelector('.todo-list');
-
-const todoList = new ToDoList(todoListElement);
-
-addForm.addEventListener('submit', (e) => {
-    if (todoInput.value !== '') {
-        todoList.taskText = todoInput.value;
-        todoList.addTask(todoInput.value);
-    } else {
-        alert('Sorry, you must add something to input. Thanks!');
-    }
-    todoInput.value = '';
-})

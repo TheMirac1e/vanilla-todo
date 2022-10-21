@@ -9,7 +9,7 @@
     <title>vanilla todo</title>
 </head>
 <body>
-<header>
+<header class="header">
     <div class="container">
         <h1 class="todo-list__title">todolist</h1>
     </div>
@@ -18,6 +18,14 @@
     <section class="section">
         <div class="container">
             <div class="todo-list">
+                <div class="todo-list__filter-wrap">
+                    <label class="todo-list__label" for="filter">Filter:</label>
+                    <select class="todo-list__filter" name="filter" id="filter">
+                        <option value="all">All</option>
+                        <option value="completed">Completed</option>
+                        <option value="uncompleted">Uncompleted</option>
+                    </select>
+                </div>
                 <form class="todo-list__form" role="form" aria-label="To do list form">
                     <label class="is-hidden" for="todoInput">form</label>
                     <input type="text" placeholder="To do..." id="todoInput">
