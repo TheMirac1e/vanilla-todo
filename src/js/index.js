@@ -28,11 +28,12 @@ class ToDoList {
             liElement.setAttribute('id', `${item.id}`);
             liElement.setAttribute('role', 'listitem');
             liElement.innerHTML = `
-               <label for="checked-${index}">
+               <label class="todo-list__label" for="checked-${index}">
                    ${item.task}
                </label>
             `
 
+            checkboxElement.classList.add('todo-list__checkbox');
             checkboxElement.setAttribute('id', `checked-${index}`);
             checkboxElement.setAttribute('type', 'checkbox');
 
