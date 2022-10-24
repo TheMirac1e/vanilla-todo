@@ -35,9 +35,9 @@ class ToDoList {
                 <label class="todo-list__label" for="checked-${index}">
                    ${item.task}
                 </label>
-                <span class="todo-list__like" aria-hidden="true" title="heart">
+                <button class="todo-list__like" type="button" aria-hidden="true" title="heart">
                     <i class="far fa-heart"></i>
-                </span>
+                </button>
                 <button class="todo-list__delete" type="button">
                 <i class="fas fa-times"></i>
                     delete

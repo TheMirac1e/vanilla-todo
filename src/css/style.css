@@ -68,8 +68,8 @@ body {
     transition: all .1s ease-in;
 }
 
-.todo-list__form button:hover,
-.todo-list__form button:focus {
+.todo-list__add:hover,
+.todo-list__add:focus {
     opacity: 0.7;
 }
 
@@ -92,7 +92,6 @@ body {
 }
 
 .todo-list__checkbox {
-    border-radius: 50%;
     cursor: pointer;
     margin-right: 10px;
     width: 20px;
@@ -102,6 +101,7 @@ body {
 
 .todo-list__label {
     cursor: pointer;
+    width: 100%;
 }
 
 .todo-list__item.is-checked {
@@ -113,31 +113,35 @@ body {
     text-decoration: line-through;
 }
 
-.todo-list__like > .fa-heart {
-    width: 35px;
-    height: 35px;
-    text-align: center;
-    line-height: 35px;
-    font-size: 1.6rem;
-    color: #333333;
-    flex-shrink: 0;
-    transition: 0.4s all;
-    margin-right: 7px;
-}
-
-.todo-list__like > .fa-heart:hover,
-.todo-list__like > .fa-heart:focus {
-    color: coral;
-}
-
-.todo-list__item.like .fa-heart {
+.todo-list__item.like .todo-list__like > i {
     color: coral;
     font-weight: bold;
 }
 
-.todo-list__item.is-checked .fa-heart {
+.todo-list__item.is-checked .todo-list__like > i {
     color: grey;
     pointer-events: none;
+}
+
+.todo-list__like {
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    border: none;
+    flex-shrink: 0;
+    margin-right: 7px;
+    cursor: pointer;
+}
+
+.todo-list__like > i {
+    font-size: 1.6rem;
+    color: #333333;
+    transition: 0.4s all;
+}
+
+.todo-list__like > i:hover,
+.todo-list__like > i:focus {
+    color: coral;
 }
 
 .todo-list__delete {
@@ -156,6 +160,7 @@ body {
 
 .todo-list__delete i {
     font-size: 1.2rem;
+    margin-right: 3px;
 }
 
 .todo-list__delete:disabled {
@@ -185,6 +190,7 @@ body {
     cursor: pointer;
     outline: none;
     padding: 10px 5px;
+    transition: all .1s ease-in;
 }
 
 .todo-list__filter:hover,
@@ -192,10 +198,9 @@ body {
     opacity: 0.7;
 }
 
-.todo-list__label {
+.todo-list__filter-label {
     font-size: 2rem;
     margin-right: 5px;
-    width: 100%;
 }
 
 .is-hidden {
@@ -218,11 +223,9 @@ body {
         font-size: 0;
     }
 
-    .todo-list__like > .fa-heart {
+    .todo-list__like {
         width: 30px;
         height: 30px;
-        margin-right: 4px;
-        line-height: 30px;
     }
 }
 
