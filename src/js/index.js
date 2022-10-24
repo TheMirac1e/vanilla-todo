@@ -4,14 +4,19 @@ class ToDoList {
         this.listElement = listElement;
         this.taskText = '';
         this.isChecked = false;
+        this.isFavorite = false;
         this.taskId = Math.floor(Math.random() * Date.now());
         this.init();
     }
 
     init() {
         this.createTaskElement();
+        this.addEvents();
+    }
+
+    addEvents() {
         this.formSubmitHandler();
-        this.filterInputHandler();
+        this.filterSelectHandler();
     }
 
     createTaskElement() {
@@ -21,26 +26,31 @@ class ToDoList {
 
         this.tasks.forEach((item, index) => {
             const liElement = document.createElement('li');
-            const deleteButton = document.createElement('button');
-            const checkboxElement = document.createElement('input');
 
             liElement.classList.add('todo-list__item');
             liElement.setAttribute('id', `${item.id}`);
             liElement.setAttribute('role', 'listitem');
             liElement.innerHTML = `
-               <label class="todo-list__label" for="checked-${index}">
+                <input class="todo-list__checkbox" id="checked-${index}" type="checkbox">
+                <label class="todo-list__label" for="checked-${index}">
                    ${item.task}
-               </label>
+                </label>
+                <span class="todo-list__like" aria-hidden="true" title="heart">
+                    <i class="far fa-heart"></i>
+                </span>
+                <button class="todo-list__delete" type="button">
+                <i class="fas fa-times"></i>
+                    delete
+                </button>      
             `
-
-            checkboxElement.classList.add('todo-list__checkbox');
-            checkboxElement.setAttribute('id', `checked-${index}`);
-            checkboxElement.setAttribute('type', 'checkbox');
+            const deleteElement = liElement.querySelector('.todo-list__delete');
+            const checkboxElement = liElement.querySelector('.todo-list__checkbox');
+            const likeElement = liElement.querySelector('.todo-list__like');
 
             if (item.isComplete) {
                 liElement.classList.add('is-checked');
                 checkboxElement.checked = true;
-                deleteButton.setAttribute('disabled', 'disabled');
+                deleteElement.setAttribute('disabled', 'disabled');
             }
 
             checkboxElement.addEventListener('click', () => {
@@ -48,19 +58,26 @@ class ToDoList {
                     item.isComplete = true;
                     this.saveTaskInLocalStorage();
                     liElement.classList.add('is-checked');
-                    deleteButton.setAttribute('disabled', 'disabled');
+                    deleteElement.setAttribute('disabled', 'disabled');
                 } else {
                     item.isComplete = false;
                     this.saveTaskInLocalStorage();
                     liElement.classList.remove('is-checked');
-                    deleteButton.removeAttribute('disabled');
+                    deleteElement.removeAttribute('disabled');
                 }
-            })
+            });
 
-            deleteButton.classList.add('todo-list__delete');
-            deleteButton.setAttribute('type', 'button');
-            deleteButton.innerText = 'delete'
-            deleteButton.addEventListener('click', () => {
+            if (item.isFavorite) {
+                liElement.classList.add('like');
+            }
+
+            likeElement.addEventListener('click', () => {
+                liElement.classList.toggle('like');
+                item.isFavorite = liElement.classList.contains('like');
+                this.saveTaskInLocalStorage();
+            });
+
+            deleteElement.addEventListener('click', () => {
                 this.tasks = this.tasks.filter(item => {
                     return liElement.id.toString() !== item.id.toString();
                 });
@@ -69,36 +86,22 @@ class ToDoList {
             })
 
             ulElement.appendChild(liElement);
-            liElement.appendChild(deleteButton);
-            liElement.insertAdjacentElement('afterbegin', checkboxElement);
         })
 
         this.listElement.appendChild(ulElement);
     }
 
-    addTask(text) {
-        if (text === '' || text === null) {
-            console.log('sorry, add some to input');
-        } else {
-            this.tasks.push({
-                'task': this.taskText,
-                'isComplete': this.isChecked,
-                'id': this.taskId,
-            });
-            this.saveTaskInLocalStorage();
-        }
+    addTask() {
+        this.tasks.push({
+            'task': this.taskText,
+            'isComplete': this.isChecked,
+            'id': this.taskId,
+            'isFavorite': this.isFavorite
+        });
+        this.saveTaskInLocalStorage();
     }
 
-    filterInputHandler() {
-        const todoFilter = document.querySelector('.todo-list__filter');
-
-        todoFilter.addEventListener('change', (e) => {
-            this.filterByName(e);
-        })
-
-    }
-
-    filterByName(event) {
+    filterTasks(event) {
         const tasks = document.querySelectorAll('.todo-list__item');
 
         tasks.forEach(task => {
@@ -106,21 +109,36 @@ class ToDoList {
                 case 'all':
                     task.style.display = 'flex';
                     break;
+                case 'favorites':
+                    if (task.classList.contains('like')) {
+                        task.style.display = 'flex';
+                    } else {
+                        task.style.display = 'none';
+                    }
+                    break;
                 case 'uncompleted':
-                    if(task.classList.contains('is-checked')) {
+                    if (task.classList.contains('is-checked')) {
                         task.style.display = 'none';
                     } else {
                         task.style.display = 'flex';
                     }
                     break;
                 case 'completed':
-                    if(!task.classList.contains('is-checked')) {
+                    if (!task.classList.contains('is-checked')) {
                         task.style.display = 'none';
                     } else {
                         task.style.display = 'flex';
                     }
                     break;
             }
+        })
+    }
+
+    filterSelectHandler() {
+        const todoFilter = document.querySelector('.todo-list__filter');
+
+        todoFilter.addEventListener('change', (e) => {
+            this.filterTasks(e);
         })
     }
 
@@ -131,7 +149,7 @@ class ToDoList {
         addForm.addEventListener('submit', () => {
             if (todoInput.value !== '') {
                 this.taskText = todoInput.value;
-                this.addTask(todoInput.value);
+                this.addTask();
             } else {
                 alert('Sorry, you must add something to input. Thanks!');
             }
